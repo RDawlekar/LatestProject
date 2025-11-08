@@ -1,10 +1,9 @@
 package StepDefinations;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Properties;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
@@ -18,9 +17,10 @@ import io.cucumber.java.After;
 import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.BeforeStep;
+import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
-import io.github.bonigarcia.wdm.WebDriverManager;
+
 
 public class CommonStepDefinations {
 	static WebDriver driver;
@@ -50,12 +50,12 @@ public class CommonStepDefinations {
 	}
 	
 	@AfterStep()
-	public static void takeScreenshot() throws IOException {
-//		String destination=System.getProperty("user.dir")+"/test-output/Spark Report/screenshots/");
-//		TakesScreenshot ts=(TakesScreenshot)driver;
-//		File source=ts.getScreenshotAs(OutputType.FILE);
-//		FileUtils.copy(source, destination);
-//		
+	public static void takeScreenshot(Scenario sc) throws IOException {
+		String uniqueDateTime=new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());		
+		String destination=System.getProperty("user.dir")+"test-output/ExtentReport/ScreenShot/ScreenShot_"+uniqueDateTime+".png";
+		TakesScreenshot ts=(TakesScreenshot)driver;
+		byte[] source=ts.getScreenshotAs(OutputType.BYTES);
+		sc.attach(source,"image/png",sc.toString());
 	}
 	
 	@Given("User launches URL")

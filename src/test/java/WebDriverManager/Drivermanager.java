@@ -31,7 +31,7 @@ public class Drivermanager {
 		option.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 		option.addArguments("--start-maximized");
 		WebDriverManager.edgedriver().setup();
-		if(GetConfigData.getSession().equals("new"))
+		if(GetConfigData.getSession().toLowerCase().equals("new"))
 		{
 			driver =new EdgeDriver(option);
 			Capabilities capabilities =((EdgeDriver) driver).getCapabilities();
