@@ -23,6 +23,7 @@ import io.cucumber.java.en.When;
 
 
 public class CommonStepDefinations {
+	private static final String OUTPUTTYPE = null;
 	static WebDriver driver;
 	
 	public CommonStepDefinations()
@@ -56,7 +57,8 @@ public class CommonStepDefinations {
 		TakesScreenshot ts=(TakesScreenshot)driver;
 		byte[] source=ts.getScreenshotAs(OutputType.BYTES);
 		sc.attach(source,"image/png",sc.toString());
-	}
+		
+						}
 	
 	@Given("User launches URL")
 	public void launchURL() {
