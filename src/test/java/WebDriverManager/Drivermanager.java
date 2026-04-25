@@ -88,18 +88,5 @@ public class Drivermanager {
 		return driver;
 	}
 
-	public static Properties readConfig()
-	{
-		FileInputStream fis = null;
-		Properties prop = new Properties();
-		try {
-			fis = new FileInputStream(System.getProperty("user.dir")+"//src//test//resources//configurations.properties");
-			prop.load(fis);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return prop;
-	}
 
 }

@@ -1,13 +1,14 @@
 package WebDriverManager;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 import io.cucumber.java.Scenario;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class GetConfigData {
-	static Properties prop=Drivermanager.readConfig();
+	static Properties prop=readConfig();
 	static String URL;
 	static String session;
 	static Scenario sc;
@@ -47,6 +48,17 @@ public class GetConfigData {
 		// TODO Auto-generated method stub
 		return sc.getName();
 	}
-	
+	public static Properties readConfig()
+	{
+		FileInputStream fis = null;
+		Properties prop = new Properties();
+		try {
+			fis = new FileInputStream(System.getProperty("user.dir")+"//src//test//resources//configurations.properties");
+			prop.load(fis);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return prop;
+	}
 
 }
