@@ -2,9 +2,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "reshma-latest", "reshma-latest" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "reshma-latest", "reshma-latest" ]
   workflow_dispatch:  # Allows manual trigger from GitHub Actions UI
 
 jobs:
