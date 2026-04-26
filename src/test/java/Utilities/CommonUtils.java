@@ -6,6 +6,8 @@ import java.util.Set;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WindowType;
@@ -103,12 +105,39 @@ public class CommonUtils extends TestContext {
 		Set<Cookie> cookie=	driver.manage().getCookies();
 		return cookie.size()>0?cookie:null;
 	}
-	
+
 	//waits
 	public WebElement explicitWaitForVisibilityOfElement(String locator,Long duration)
 	{
 		WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(duration));
 		WebElement ele=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(locator)));
 		return ele.isDisplayed()?ele:null;
+	}
+
+	public WebElement shadowElement(String rootlocator,String elementToFind)
+	{
+		WebElement root=driver.findElement(By.cssSelector(rootlocator));
+		SearchContext shadow=root.getShadowRoot();
+		return shadow.findElement(By.cssSelector(elementToFind));
+
+	}
+
+	public void jScriptExecutorActions(String actionType,String locator)
+	{
+		JavascriptExecutor js=(JavascriptExecutor)driver;
+		switch(actionType) {
+		case "click":
+			js.executeScript("arguments[0].click", driver.findElement(By.xpath(locator)));
+			break;
+		case "Top":
+			js.executeScript("window.scrollBy(0,0)");
+			break;
+		case "viewElement":
+			js.executeScript("argument[0].scrollIntoView(true)",driver.findElement(By.xpath(locator)));
+			break;
+		case "bottom":
+			js.executeScript("window.scrollTo(0,document.body.scrollHeight);");
+			break;
+		}
 	}
 }
