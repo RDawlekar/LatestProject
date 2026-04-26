@@ -87,7 +87,6 @@ public class Drivermanager {
 
 	public static WebDriver getdriver()
 	{
-
 		return driver;
 	}
 
