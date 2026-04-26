@@ -7,6 +7,10 @@ on:
     branches: [ "reshma-latest", "reshma-latest" ]
   workflow_dispatch:  # Allows manual trigger from GitHub Actions UI
 
+# Opt into Node.js 24 for all actions (fixes Node.js 20 deprecation warning)
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build-and-test:
     name: Build & Run Maven Tests
@@ -17,21 +21,66 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up Java 17 (Temurin/Eclipse distribution)
+      # Step 2: Set up Java 17 with Maven dependency caching
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: maven   # Automatically caches ~/.m2 based on pom.xml hash
+          cache: maven
 
-      # Step 3: Run Maven tests
+      # Step 3: Install Microsoft Edge (stable) browser
+      - name: Install Microsoft Edge
+        uses: browser-actions/setup-edge@v1
+        with:
+          edge-version: stable
+
+      # Step 4: Install matching EdgeDriver version
+      - name: Install EdgeDriver
+        run: |
+          # Get the installed Edge version
+          EDGE_VERSION=$(microsoft-edge --version | grep -oP '\d+\.\d+\.\d+\.\d+')
+          echo "Installed Edge version: $EDGE_VERSION"
+
+          # Download matching EdgeDriver from Microsoft
+          MAJOR_VERSION=$(echo $EDGE_VERSION | cut -d. -f1)
+          DRIVER_VERSION=$(curl -s "https://msedgedriver.azureedge.net/LATEST_RELEASE_${MAJOR_VERSION}_LINUX" || \
+                           curl -s "https://msedgedriver.azureedge.net/LATEST_RELEASE_${MAJOR_VERSION}")
+          echo "EdgeDriver version to install: $DRIVER_VERSION"
+
+          # Download and install EdgeDriver
+          curl -sSL "https://msedgedriver.azureedge.net/${DRIVER_VERSION}/edgedriver_linux64.zip" -o edgedriver.zip
+          unzip -q edgedriver.zip msedgedriver
+          sudo mv msedgedriver /usr/local/bin/msedgedriver
+          sudo chmod +x /usr/local/bin/msedgedriver
+          msedgedriver --version
+
+      # Step 5: Set up virtual display (needed for browser UI in headless CI)
+      - name: Set up virtual display (Xvfb)
+        run: |
+          sudo apt-get install -y xvfb
+          Xvfb :99 -screen 0 1920x1080x24 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+
+      # Step 6: Print versions for debugging
+      - name: Print environment versions
+        run: |
+          java -version
+          mvn -version
+          microsoft-edge --version
+          msedgedriver --version
+
+      # Step 7: Run Maven tests
+      # Edge runs in headless mode via DISPLAY=:99 set above.
+      # -e = show full stack traces, -fae = run all tests before failing
       - name: Run Tests with Maven
-        run: mvn -B test --file pom.xml
+        run: mvn -B test --file pom.xml -e -fae
+        env:
+          DISPLAY: :99
 
-      # Step 4: Upload Surefire test reports as artifacts (always runs, even on failure)
+      # Step 8: Upload Surefire test reports (always runs, even on failure)
       - name: Upload Test Reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: always()
         with:
           name: surefire-test-reports
