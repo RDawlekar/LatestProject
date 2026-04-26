@@ -13,6 +13,8 @@ import java.util.Properties;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 
@@ -26,7 +28,7 @@ public class Drivermanager {
 	public static void intialiseBrowser()
 	{	
 		String filename=System.getProperty("user.dir")+"//src//test//resources//debugger_address.txt";
-		EdgeOptions option=new EdgeOptions();
+		ChromeOptions option=new ChromeOptions();
 		Map<String,Object> map = null;
 		option.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 		option.addArguments("--start-maximized");
@@ -34,13 +36,13 @@ public class Drivermanager {
 //		WebDriverManager.edgedriver().setup();
 		if(GetConfigData.getSession().toLowerCase().equals("new"))
 		{
-			driver =new EdgeDriver(option);
-			Capabilities capabilities =((EdgeDriver) driver).getCapabilities();
+			driver =new ChromeDriver(option);
+			Capabilities capabilities =((ChromeDriver) driver).getCapabilities();
 			map=capabilities.asMap();	
 			System.out.println("Existing browser capabilities : "+map);
 			for (Map.Entry<String, Object> entry : capabilities.asMap().entrySet()) {
 				System.out.println("  " + entry.getKey() + ": " + entry.getValue());
-				if(entry.getKey().contains("edgeOptions"))
+				if(entry.getKey().contains("chromeOptions"))
 				{
 					System.out.println(entry.getValue());
 					try {
@@ -71,7 +73,7 @@ public class Drivermanager {
 				String hostaddress=in.readObject().toString().split("=")[1].replace("}","");
 				System.out.println(hostaddress);
 				option.setExperimentalOption("debuggerAddress", hostaddress);
-				driver =new EdgeDriver(option);
+				driver =new ChromeDriver(option);
 			}
 			catch(ClassNotFoundException | IOException e)
 			{
