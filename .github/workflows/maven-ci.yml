@@ -29,46 +29,6 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # Step 3: Install Microsoft Edge (stable) browser
-      - name: Install Microsoft Edge
-        uses: browser-actions/setup-edge@v1
-        with:
-          edge-version: stable
-
-      # Step 4: Install matching EdgeDriver version
-      - name: Install EdgeDriver
-        run: |
-          # Get the installed Edge version
-          EDGE_VERSION=$(microsoft-edge --version | grep -oP '\d+\.\d+\.\d+\.\d+')
-          echo "Installed Edge version: $EDGE_VERSION"
-
-          # Download matching EdgeDriver from Microsoft
-          MAJOR_VERSION=$(echo $EDGE_VERSION | cut -d. -f1)
-          DRIVER_VERSION=$(curl -s "https://msedgedriver.azureedge.net/LATEST_RELEASE_${MAJOR_VERSION}_LINUX" || \
-                           curl -s "https://msedgedriver.azureedge.net/LATEST_RELEASE_${MAJOR_VERSION}")
-          echo "EdgeDriver version to install: $DRIVER_VERSION"
-
-          # Download and install EdgeDriver
-          curl -sSL "https://msedgedriver.azureedge.net/${DRIVER_VERSION}/edgedriver_linux64.zip" -o edgedriver.zip
-          unzip -q edgedriver.zip msedgedriver
-          sudo mv msedgedriver /usr/local/bin/msedgedriver
-          sudo chmod +x /usr/local/bin/msedgedriver
-          msedgedriver --version
-
-      # Step 5: Set up virtual display (needed for browser UI in headless CI)
-      - name: Set up virtual display (Xvfb)
-        run: |
-          sudo apt-get install -y xvfb
-          Xvfb :99 -screen 0 1920x1080x24 &
-          echo "DISPLAY=:99" >> $GITHUB_ENV
-
-      # Step 6: Print versions for debugging
-      - name: Print environment versions
-        run: |
-          java -version
-          mvn -version
-          microsoft-edge --version
-          msedgedriver --version
 
       # Step 7: Run Maven tests
       # Edge runs in headless mode via DISPLAY=:99 set above.
