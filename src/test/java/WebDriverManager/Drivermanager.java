@@ -32,17 +32,18 @@ public class Drivermanager {
 		Map<String,Object> map = null;
 		option.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 		option.addArguments("--start-maximized");
-		option.addArguments("--headless");
+//		option.addArguments("--headless");
 //		WebDriverManager.edgedriver().setup();
 		if(GetConfigData.getSession().toLowerCase().equals("new"))
 		{
 			driver =new ChromeDriver(option);
-			Capabilities capabilities =((ChromeDriver) driver).getCapabilities();
+			WebDriverFactory.setWebDriver(driver);
+			Capabilities capabilities =((ChromeDriver) WebDriverFactory.getWebDriver() ).getCapabilities();
 			map=capabilities.asMap();	
 			System.out.println("Existing browser capabilities : "+map);
 			for (Map.Entry<String, Object> entry : capabilities.asMap().entrySet()) {
 				System.out.println("  " + entry.getKey() + ": " + entry.getValue());
-				if(entry.getKey().contains("chromeOptions"))
+				if(entry.getKey().contains("edgeOptions"))
 				{
 					System.out.println(entry.getValue());
 					try {
@@ -85,9 +86,15 @@ public class Drivermanager {
 
 	}	
 
-	public static WebDriver getdriver()
+	public WebDriver getdriver()
 	{
-		return driver;
+		try {
+			return  WebDriverFactory.getWebDriver();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return  WebDriverFactory.getWebDriver();
 	}
 
 

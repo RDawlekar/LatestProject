@@ -16,15 +16,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import StepDefinations.TestContext;
+import WebDriverManager.WebDriverFactory;
 
 public class CommonUtils extends TestContext {
 
-	private WebDriver driver;
+	private WebDriver driver=WebDriverFactory.getWebDriver();
 
-	public CommonUtils()
-	{
-		this.driver=super.getDriver();
-	}
+	
 	public void launchUrl(String Url)
 	{
 		driver.get(Url);
@@ -107,7 +105,7 @@ public class CommonUtils extends TestContext {
 	}
 
 	//waits
-	public WebElement explicitWaitForVisibilityOfElement(String locator,Long duration)
+	public  WebElement explicitWaitForVisibilityOfElement(String locator,int duration)
 	{
 		WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(duration));
 		WebElement ele=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(locator)));
@@ -130,10 +128,10 @@ public class CommonUtils extends TestContext {
 			js.executeScript("arguments[0].click", driver.findElement(By.xpath(locator)));
 			break;
 		case "Top":
-			js.executeScript("window.scrollBy(0,0)");
+			js.executeScript("window.scrollBy(0,0);");
 			break;
 		case "viewElement":
-			js.executeScript("argument[0].scrollIntoView(true)",driver.findElement(By.xpath(locator)));
+			js.executeScript("argument[0].scrollIntoView(true);",driver.findElement(By.xpath(locator)));
 			break;
 		case "bottom":
 			js.executeScript("window.scrollTo(0,document.body.scrollHeight);");

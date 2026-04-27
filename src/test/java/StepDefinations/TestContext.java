@@ -11,10 +11,6 @@ import WebDriverManager.Drivermanager;
 public class TestContext {
 	
 	private WebDriver driver;
-	
-	public WebDriver getDriver() {
-		return Drivermanager.getdriver();
-	}
 
 
 }

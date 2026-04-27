@@ -5,3 +5,7 @@ Feature: User Login Functionality1
   @Execute
   Scenario Outline: Sanityone
     When User enter search value "Mobiles"
+    
+    @Execute
+  Scenario Outline: Sanitytwo
+    When User enter search value "Clothing"

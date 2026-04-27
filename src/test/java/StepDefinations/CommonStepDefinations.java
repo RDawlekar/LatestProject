@@ -13,6 +13,7 @@ import org.openqa.selenium.WebDriver;
 import PageObjects.CommonPageObjects;
 import WebDriverManager.Drivermanager;
 import WebDriverManager.GetConfigData;
+import WebDriverManager.WebDriverFactory;
 import io.cucumber.java.After;
 import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
@@ -24,52 +25,60 @@ import io.cucumber.java.en.When;
 
 public class CommonStepDefinations {
 	private static final String OUTPUTTYPE = null;
-	static WebDriver driver;
+	WebDriver driver;
 	
 	public CommonStepDefinations()
 	{
-		this.driver=Drivermanager.getdriver();
+		this.driver=WebDriverFactory.getWebDriver();
 	}
 		
 	@Before()
-	public static void startDriver()
+	public  void startDriver()
 	{
 		
 		Drivermanager.intialiseBrowser();		
 	}
 	
 	@After()
-	public static void quitBrowser()
+	public void quitBrowser()
 	{
-//		driver.quit();
+		WebDriverFactory.getWebDriver().quit();
 	}
 	
 	@BeforeStep()
-	public static void tearUp() {
+	public void tearUp() {
 		
 		
 	}
 	
-	@AfterStep()
-	public static void takeScreenshot(Scenario sc) throws IOException {
-		String uniqueDateTime=new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());		
-		String destination=System.getProperty("user.dir")+"test-output/ExtentReport/ScreenShot/ScreenShot_"+uniqueDateTime+".png";
-		TakesScreenshot ts=(TakesScreenshot)driver;
-		byte[] source=ts.getScreenshotAs(OutputType.BYTES);
-		sc.attach(source,"image/png",sc.toString());
-		
-						}
+	   @AfterStep
+	    public void takeScreenshot(Scenario sc) throws IOException {
+	        if (sc.isFailed()) {
+	            WebDriver driver = WebDriverFactory.getWebDriver();
+	            if (driver != null) {
+	                try {
+	                    byte[] source = ((TakesScreenshot) driver)
+	                        .getScreenshotAs(OutputType.BYTES);
+	                    sc.attach(source, "image/png", sc.getName());
+	                } catch (Exception e) {
+	                    System.out.println("Screenshot failed for thread "
+	                        + Thread.currentThread().getId()
+	                        + ": " + e.getMessage());
+	                }
+	            }
+	        }
+	    }
+
 	
-	@Given("User launches URL")
-	public void launchURL() {
-		String url=GetConfigData.getURL();
-		System.out.print("Launching :" + url);
-		driver.get(url);		
-	}
-	
-	@When("User enter search value {string}")
-	public void searchData(String data) {
-		CommonPageObjects.enterDataForSearch(driver,data);
-		
-	}
+@Given("User launches URL")
+public void launchURL() {
+    String url = GetConfigData.getURL();
+    System.out.println("Launching : " + url);
+    WebDriverFactory.getWebDriver().get(url);
+}
+@When("User enter search value {string}")
+public void searchData(String data) {
+    CommonPageObjects commonPageObjects = new CommonPageObjects();
+    commonPageObjects.enterDataForSearch(WebDriverFactory.getWebDriver(), data);
+}
 }
