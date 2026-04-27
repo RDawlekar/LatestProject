@@ -32,7 +32,7 @@ public class Drivermanager {
 		Map<String,Object> map = null;
 		option.setPageLoadStrategy(PageLoadStrategy.NORMAL);
 		option.addArguments("--start-maximized");
-//		option.addArguments("--headless");
+		option.addArguments("--headless");
 //		WebDriverManager.edgedriver().setup();
 		if(GetConfigData.getSession().toLowerCase().equals("new"))
 		{
