@@ -68,8 +68,6 @@ public class CommonStepDefinations {
 	            }
 	        }
 	    }
-
-	
 @Given("User launches URL")
 public void launchURL() {
     String url = GetConfigData.getURL();
