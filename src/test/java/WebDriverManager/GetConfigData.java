@@ -29,13 +29,21 @@ public class GetConfigData {
 		URL =prop.getProperty("url");
 		System.out.print("Launching :" + URL);
 	}
+	public static String getGridURL() {
+		String path=prop.getProperty("seleniumGridURL");
+		return path;
+	}
 	
+	public static String getIsSeleniumGrid() {
+		String path=prop.getProperty("isSeleniumGrid");
+		return path;
+	}
 	static String Browser;
-	public String getBrowser() {
+	public static String getBrowser() {
 		setBrowser();
 		return Browser;
 	}
-	public void setBrowser() {
+	public static void setBrowser() {
 		Browser =prop.getProperty("browser");
 		
 	}
