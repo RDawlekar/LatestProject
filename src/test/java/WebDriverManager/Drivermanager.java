@@ -33,7 +33,6 @@ public class Drivermanager {
 	public static void intialiseBrowser()
 	{	
 
-		
 		if (GetConfigData.getIsSeleniumGrid().toLowerCase().equals("false")) {
 			if (GetConfigData.getSession().toLowerCase().equals("new")) {
 				switch(GetConfigData.getBrowser().toLowerCase())
@@ -44,7 +43,7 @@ public class Drivermanager {
 					option.addArguments("--start-maximized");
 					option.addArguments("--headless");
 					driver =new ChromeDriver(option);
-					WebDriverManager.chromedriver().setup();
+					WebDriverFactory.setWebDriver(driver);
 //					storeSession();
 					break;
 				case "firefox":
@@ -53,6 +52,7 @@ public class Drivermanager {
 					fireoption.addArguments("--start-maximized");
 					fireoption.addArguments("--headless");
 					driver =new FirefoxDriver(fireoption) ;	
+					WebDriverFactory.setWebDriver(driver);
 					break;
 				}
 				
@@ -63,9 +63,8 @@ public class Drivermanager {
 			//applicable for chrome only
 				ChromeOptions option = getSession();
 				driver = new ChromeDriver(option);
-				WebDriverManager.chromedriver().setup();
 			}
-		
+			
 		}
 
 		else if(GetConfigData.getIsSeleniumGrid().toLowerCase().equals("true"))
@@ -107,7 +106,7 @@ public static ChromeOptions getSession() {
 	public static void storeSession() {
 		Map<String,Object> map = null;
 		String filename=System.getProperty("user.dir")+"//src//test//resources//debugger_address.txt";
-		Capabilities capabilities =((ChromeDriver) WebDriverFactory.getWebDriver() ).getCapabilities();
+		Capabilities capabilities =((ChromeDriver) WebDriverFactory. getDriver()).getCapabilities();
 		//		map=capabilities.asMap();	
 		System.out.println("Existing browser capabilities : "+map);
 		for (Map.Entry<String, Object> entry : capabilities.asMap().entrySet()) {
@@ -137,12 +136,12 @@ public static ChromeOptions getSession() {
 	public WebDriver getdriver()
 	{
 		try {
-			return  WebDriverFactory.getWebDriver();
+			return  WebDriverFactory.getDriver();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return  WebDriverFactory.getWebDriver();
+		return  WebDriverFactory.getDriver();
 	}
 
 

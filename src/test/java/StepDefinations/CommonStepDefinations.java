@@ -27,10 +27,7 @@ public class CommonStepDefinations {
 	private static final String OUTPUTTYPE = null;
 	WebDriver driver;
 	
-	public CommonStepDefinations()
-	{
-		this.driver=WebDriverFactory.getWebDriver();
-	}
+	
 		
 	@Before()
 	public  void startDriver()
@@ -42,7 +39,7 @@ public class CommonStepDefinations {
 	@After()
 	public void quitBrowser()
 	{
-		WebDriverFactory.getWebDriver().quit();
+		WebDriverFactory.getDriver().quit();
 	}
 	
 	@BeforeStep()
@@ -54,7 +51,7 @@ public class CommonStepDefinations {
 	   @AfterStep
 	    public void takeScreenshot(Scenario sc) throws IOException {
 	        if (sc.isFailed()) {
-	            WebDriver driver = WebDriverFactory.getWebDriver();
+	            WebDriver driver = WebDriverFactory.getDriver();
 	            if (driver != null) {
 	                try {
 	                    byte[] source = ((TakesScreenshot) driver)
@@ -72,11 +69,11 @@ public class CommonStepDefinations {
 public void launchURL() {
     String url = GetConfigData.getURL();
     System.out.println("Launching : " + url);
-    WebDriverFactory.getWebDriver().get(url);
+    WebDriverFactory.getDriver().get(url);
 }
 @When("User enter search value {string}")
 public void searchData(String data) {
     CommonPageObjects commonPageObjects = new CommonPageObjects();
-    commonPageObjects.enterDataForSearch(WebDriverFactory.getWebDriver(), data);
+    commonPageObjects.enterDataForSearch(WebDriverFactory.getDriver(), data);
 }
 }

@@ -3,6 +3,7 @@ package Utilities;
 import java.time.Duration;
 import java.util.Set;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
@@ -20,7 +21,7 @@ import WebDriverManager.WebDriverFactory;
 
 public class CommonUtils extends TestContext {
 
-	private WebDriver driver=WebDriverFactory.getWebDriver();
+	private WebDriver driver=WebDriverFactory.getDriver();
 
 	
 	public void launchUrl(String Url)
@@ -72,12 +73,23 @@ public class CommonUtils extends TestContext {
 	}
 
 	//handling alerts
-	public void acceptAlert() {
-		driver.switchTo().alert().accept();
+	public void actionsAlert(String actionsType,long duration) {
+		
+		Alert alert=explicitWaitForAlertToBePresent(duration);
+		switch(actionsType)
+		{
+		case "accept":
+		alert.accept();
+		break;
+		case "dismiss":
+            alert.dismiss();
+            break;
+		case "enterText":
+            alert.sendKeys("text to enter");
+            break;
+		}
 	}
-	public void dismissAlert() {
-		driver.switchTo().alert().dismiss();
-	}
+	
 	public void pageloadwait(Long duration) {
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(duration));
 	}
@@ -96,6 +108,14 @@ public class CommonUtils extends TestContext {
 	{
 		driver.switchTo().frame(driver.findElement(By.xpath(locator)));
 	}
+	
+	public void switchToDefaultContent() {
+		driver.switchTo().defaultContent();
+	}
+	
+	public void switchToFrameImmediataeParent() {
+		driver.switchTo().parentFrame();
+	}
 
 	//Cookies
 
@@ -111,7 +131,18 @@ public class CommonUtils extends TestContext {
 		WebElement ele=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(locator)));
 		return ele.isDisplayed()?ele:null;
 	}
-
+	public  Alert explicitWaitForAlertToBePresent(long duration)
+	{
+		try {
+		WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(duration));
+		Alert alert=wait.until(ExpectedConditions.alertIsPresent());
+		return alert!=null?alert:null;
+		}
+		catch (Exception e) {
+			System.out.println("Alert is not present");
+			return null;
+		}
+	}
 	public WebElement shadowElement(String rootlocator,String elementToFind)
 	{
 		WebElement root=driver.findElement(By.cssSelector(rootlocator));
