@@ -2,10 +2,10 @@
 Feature: User Login Functionality1
    Background:
    Given User launches URL
-  @Execute
+  @Web
   Scenario Outline: Sanityone
     When User enter search value "Mobiles"
     
-    @Execute
+  @Web
   Scenario Outline: Sanitytwo
     When User enter search value "Clothing"

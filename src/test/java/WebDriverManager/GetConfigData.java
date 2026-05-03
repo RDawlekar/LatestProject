@@ -68,5 +68,8 @@ public class GetConfigData {
 		}
 		return prop;
 	}
-
+	public static String getBaseURI() {
+		String path=prop.getProperty("baseURI");
+		return path;
+	}
 }

@@ -26,19 +26,19 @@ public class CommonUtils extends TestContext {
 	
 	public void launchUrl(String Url)
 	{
-		driver.get(Url);
+		WebDriverFactory.getDriver() .get(Url);
 	}
 	public void navigate(String Url)
 	{
-		driver.navigate().to(Url);
+		WebDriverFactory.getDriver() .navigate().to(Url);
 	}
 	public String  getTitleOfPage(String Url)
 	{
-		return driver.getTitle().isBlank()?driver.getTitle() :null;
+		return WebDriverFactory.getDriver() .getTitle().isBlank()?WebDriverFactory.getDriver() .getTitle() :null;
 	}
 	public String getSourceOfPage(String Url)
 	{
-		return driver.getPageSource().isBlank() ? driver.getPageSource() :null;
+		return WebDriverFactory.getDriver() .getPageSource().isBlank() ? driver.getPageSource() :null;
 	}
 
 	//window handles
@@ -49,27 +49,27 @@ public class CommonUtils extends TestContext {
 		{
 			if(window.contains(title))
 			{
-				driver.switchTo().window(window);
+				WebDriverFactory.getDriver() .switchTo().window(window);
 				break;
 			}
 		}
 	}
 	public void openNewTab()
 	{
-		driver.switchTo().newWindow(WindowType.TAB);
+		WebDriverFactory.getDriver() .switchTo().newWindow(WindowType.TAB);
 	}
 
 	public void openNewWindow()
 	{
-		driver.switchTo().newWindow(WindowType.WINDOW);
+		WebDriverFactory.getDriver() .switchTo().newWindow(WindowType.WINDOW);
 	}
 
 
 	public void maximizeWindow() {
-		driver.manage().window().maximize();
+		WebDriverFactory.getDriver() .manage().window().maximize();
 	}
 	public Dimension getWindowSize() {
-		return driver.manage().window().getSize();
+		return WebDriverFactory.getDriver() .manage().window().getSize();
 	}
 
 	//handling alerts
@@ -91,50 +91,50 @@ public class CommonUtils extends TestContext {
 	}
 	
 	public void pageloadwait(Long duration) {
-		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(duration));
+		WebDriverFactory.getDriver() .manage().timeouts().pageLoadTimeout(Duration.ofSeconds(duration));
 	}
 	//Handling Frames
 	public void switchFrameByIndex(int index)
 	{
-		driver.switchTo().frame(index);
+		WebDriverFactory.getDriver() .switchTo().frame(index);
 	}
 
 	public void switchFrameByName(String name)
 	{
-		driver.switchTo().frame(name);
+		WebDriverFactory.getDriver() .switchTo().frame(name);
 	}
 
 	public void switchFrameByLocator(String locator)
 	{
-		driver.switchTo().frame(driver.findElement(By.xpath(locator)));
+		WebDriverFactory.getDriver() .switchTo().frame(WebDriverFactory.getDriver() .findElement(By.xpath(locator)));
 	}
 	
 	public void switchToDefaultContent() {
-		driver.switchTo().defaultContent();
+		WebDriverFactory.getDriver() .switchTo().defaultContent();
 	}
 	
 	public void switchToFrameImmediataeParent() {
-		driver.switchTo().parentFrame();
+		WebDriverFactory.getDriver() .switchTo().parentFrame();
 	}
 
 	//Cookies
 
 	public Set<Cookie> getCookie() {
-		Set<Cookie> cookie=	driver.manage().getCookies();
+		Set<Cookie> cookie=	WebDriverFactory.getDriver() .manage().getCookies();
 		return cookie.size()>0?cookie:null;
 	}
 
 	//waits
 	public  WebElement explicitWaitForVisibilityOfElement(String locator,int duration)
 	{
-		WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(duration));
+		WebDriverWait wait=new WebDriverWait(WebDriverFactory.getDriver() ,Duration.ofSeconds(duration));
 		WebElement ele=wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(locator)));
 		return ele.isDisplayed()?ele:null;
 	}
 	public  Alert explicitWaitForAlertToBePresent(long duration)
 	{
 		try {
-		WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(duration));
+		WebDriverWait wait=new WebDriverWait(WebDriverFactory.getDriver() ,Duration.ofSeconds(duration));
 		Alert alert=wait.until(ExpectedConditions.alertIsPresent());
 		return alert!=null?alert:null;
 		}
@@ -145,7 +145,7 @@ public class CommonUtils extends TestContext {
 	}
 	public WebElement shadowElement(String rootlocator,String elementToFind)
 	{
-		WebElement root=driver.findElement(By.cssSelector(rootlocator));
+		WebElement root=WebDriverFactory.getDriver() .findElement(By.cssSelector(rootlocator));
 		SearchContext shadow=root.getShadowRoot();
 		return shadow.findElement(By.cssSelector(elementToFind));
 
@@ -153,7 +153,7 @@ public class CommonUtils extends TestContext {
 
 	public void jScriptExecutorActions(String actionType,String locator)
 	{
-		JavascriptExecutor js=(JavascriptExecutor)driver;
+		JavascriptExecutor js=(JavascriptExecutor)WebDriverFactory.getDriver() ;
 		switch(actionType) {
 		case "click":
 			js.executeScript("arguments[0].click", driver.findElement(By.xpath(locator)));

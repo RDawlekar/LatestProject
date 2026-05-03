@@ -29,26 +29,26 @@ public class CommonStepDefinations {
 	
 	
 		
-	@Before()
+	@Before("@Web")
 	public  void startDriver()
 	{
 		
 		Drivermanager.intialiseBrowser();		
 	}
 	
-	@After()
+	@After("@Web")
 	public void quitBrowser()
 	{
 		WebDriverFactory.getDriver().quit();
 	}
 	
-	@BeforeStep()
+	@BeforeStep("@Web")
 	public void tearUp() {
 		
 		
 	}
 	
-	   @AfterStep
+	   @AfterStep("@Web")
 	    public void takeScreenshot(Scenario sc) throws IOException {
 	        if (sc.isFailed()) {
 	            WebDriver driver = WebDriverFactory.getDriver();
